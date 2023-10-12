@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileReader {
-    public List<Pair<Object, String>> readFile(File file) {
+    public List<Pair<Object, String>> readFile(File file, Integer documentId) {
         List<Pair<Object, String>> lines = new ArrayList<>();
 
         // Read file
@@ -16,7 +16,7 @@ public class FileReader {
 
             // Add each line to lines
             while ((line = reader.readLine()) != null) {
-                lines.add(new Pair<>(8, line)); // key wordt hier document id
+                lines.add(new Pair<>(documentId, line)); // key wordt hier document id
             }
         } catch (IOException e) {
             // Display error message

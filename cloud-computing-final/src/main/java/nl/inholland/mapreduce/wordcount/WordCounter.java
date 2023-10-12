@@ -41,7 +41,13 @@ public class WordCounter {
             FileReader fileReader = new FileReader();
             List<Pair<Object, String>> input = new ArrayList<>();
             for (File file : new FolderReader().readFolder(folder)) {
-                input.addAll(fileReader.readFile(file));
+                //search for filename in files
+                String fileName = file.getPath();
+                for (Map.Entry<String, Integer> entry : files.entrySet()) {
+                    if (entry.getKey().equals(fileName)) {
+                        input.addAll(fileReader.readFile(file, entry.getValue()));
+                    }
+                }
             }
 
             // Run map reduce
@@ -49,7 +55,7 @@ public class WordCounter {
             Map<String, Integer> output = mapReduce.runReduce(new WordCountReducer(), intermediate);
 
             // Display output
-            // intermediate.forEach((k, v) -> System.out.println(k + ": " + v));
+            intermediate.forEach((k, v) -> System.out.println(k + ": " + v));
             // output.forEach((k, v) -> System.out.println(k + ": " + v));
         } catch (IOException e) {
             // Display error message
