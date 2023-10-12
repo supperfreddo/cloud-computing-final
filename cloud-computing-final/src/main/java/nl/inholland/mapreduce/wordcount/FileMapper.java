@@ -11,7 +11,7 @@ public class FileMapper implements Mapper<Object, String, String, Integer> {
     @Override
     public List<Pair<String, Integer>> map(Object key, String value) {
         List<Pair<String, Integer>> output = new ArrayList<>();
-        output.add(new Pair<>(value, (Integer) key)); //value wordt hier document id
+        output.add(new Pair<>(value, (Integer) key));
         return output;
     }  
 }

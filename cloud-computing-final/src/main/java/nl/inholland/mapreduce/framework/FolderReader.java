@@ -11,7 +11,7 @@ public class FolderReader {
         // Get folders from directoy
         File folder = new File(folderPath);
         if (folder.isDirectory()) {
-            System.out.println("Reading input from " + folderPath);
+            System.out.println("Reading files from " + folderPath);
             
             // Get files from folder
             File[] filesInFolder = folder.listFiles();

@@ -16,23 +16,31 @@ public class WordCounter {
     public static void main(String[] args) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             // Ask for folder
-            System.out.println("What folder to read input from?");
+            System.out.println("What folder to read files from?");
             String folder = reader.readLine();
 
             // Create map reduce instance
             MapReduce<Object, String, String, Integer> mapReduce = new MapReduce<>();
 
-            // Get files from folder
-            FolderReader folderReader = new FolderReader();
-            List<File> files = folderReader.readFolder(folder);
+            // Read files and add to input
+            List<Pair<Object, String>> folderInput = new ArrayList<>();
+            Integer i = 0;
+            for (File file : new FolderReader().readFolder(folder)) {
+                folderInput.add(new Pair<>(i, file.getPath()));
+                i++;
+            }
 
-            // fix putting files in map instead of list
-            // Map<String, Integer> newFiles = mapReduce.runReduce(new FileMapper(), fileNames);
+            // Run map reduce
+            Map<String, List<Integer>> folderIntermediate = mapReduce.runMap(new FileMapper(), folderInput);
+            Map<String, Integer> files = mapReduce.runReduce(new WordCountReducer(), folderIntermediate);
+
+            // Display output
+            files.forEach((k, v) -> System.out.println(v + ": " + k));
 
             // Read files and add to input
             FileReader fileReader = new FileReader();
             List<Pair<Object, String>> input = new ArrayList<>();
-            for (File file : files) {
+            for (File file : new FolderReader().readFolder(folder)) {
                 input.addAll(fileReader.readFile(file));
             }
 
@@ -41,7 +49,7 @@ public class WordCounter {
             Map<String, Integer> output = mapReduce.runReduce(new WordCountReducer(), intermediate);
 
             // Display output
-            intermediate.forEach((k, v) -> System.out.println(k + ": " + v));
+            // intermediate.forEach((k, v) -> System.out.println(k + ": " + v));
             // output.forEach((k, v) -> System.out.println(k + ": " + v));
         } catch (IOException e) {
             // Display error message
