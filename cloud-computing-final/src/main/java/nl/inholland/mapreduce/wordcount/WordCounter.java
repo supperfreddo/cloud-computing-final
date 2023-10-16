@@ -38,16 +38,31 @@ public class WordCounter {
         FileReader fileReader = new FileReader();
         List<Pair<Object, String>> wordInput = new ArrayList<>();
         for (File file : fileList) {
-            if(filesMap.containsKey(file.getPath())){
+            if (filesMap.containsKey(file.getPath())) {
                 // Get document id
-                Map.Entry<String, Integer> entry = filesMap.entrySet().stream().filter(e -> e.getKey().equals(file.getPath())).findFirst().get();
-                wordInput.addAll(fileReader.readFile(file, entry.getValue())); //wordInput omzetten naar de dictionary
+                Map.Entry<String, Integer> entry = filesMap.entrySet().stream()
+                        .filter(e -> e.getKey().equals(file.getPath())).findFirst().get();
+                wordInput.addAll(fileReader.readFile(file, entry.getValue())); // wordInput omzetten naar de dictionary
             }
         }
 
         // Run map reduce
         Map<String, List<Integer>> wordIntermediate = mapReduce.runMap(new WordCountMapper(), wordInput);
         // Display output
-        wordIntermediate.forEach((k, v) -> System.out.println(k + ": " + v)); //omzetten naar de invererted index
+        wordIntermediate.forEach((k, v) -> System.out.println(k + ": " + v)); // omzetten naar de invererted index
+
+        // ask user for a list of words sperated by spaces
+        String input = "the aaaa test";
+        // split the input into a list of words
+        String[] words = input.split("\\s+");
+        List<List<Integer>> documents = new ArrayList<>();
+        // for each word in the list of words
+        for (String word : words) {
+            // get the list of documents that contain the word
+            documents.add(wordIntermediate.get(word));
+            // mapper maken zodat je gelijk string waarde die je zoekt gemapped hebt bij de results
+        }
+        // display the list of documents
+        System.out.println(documents);
     }
 }
