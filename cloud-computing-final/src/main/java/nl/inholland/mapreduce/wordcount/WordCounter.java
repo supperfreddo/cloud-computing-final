@@ -49,13 +49,14 @@ public class WordCounter {
         // Run map reduce
         Map<String, List<Integer>> wordIntermediate = mapReduce.runMap(new WordCountMapper(), wordInput);
         // Display output ; dit uiteindelijk opslaan in een file ergens
-        // wordIntermediate.forEach((k, v) -> System.out.println(k + ": " + v)); // omzetten naar de invererted index
+        // wordIntermediate.forEach((k, v) -> System.out.println(k + ": " + v)); //
+        // omzetten naar de invererted index
 
         // ask user for a list of words sperated by spaces
         String input = "the aaaa test";
         // split the input into a list of words
         String[] words = input.split("\\s+");
-        List<Pair<Object, List<Integer>>> documents = new ArrayList<>(); //dit naar Map omzetten
+        List<Pair<Object, List<Integer>>> documents = new ArrayList<>(); // dit naar Map omzetten
         // for each word in the list of words
         for (String word : words) {
             documents.add(new Pair<>(word, wordIntermediate.get(word)));
@@ -63,7 +64,10 @@ public class WordCounter {
 
         // display the list of documents
         for (Pair<Object, List<Integer>> document : documents) {
-            System.out.println(document.getKey() + ": " + document.getValue());
+            if (document.getValue() != null)
+                System.out.println(document.getKey() + ": " + document.getValue());
+            else
+                System.out.println(document.getKey() + ": " + "not found");
         }
     }
 }
