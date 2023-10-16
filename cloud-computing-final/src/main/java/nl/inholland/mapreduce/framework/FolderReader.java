@@ -5,21 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FolderReader {
-    public List<File> readFolder(String folderPath) {
+    public List<File> readFolder(String folderPath, Boolean recursive) {
         List<File> files = new ArrayList<>();
 
         // Get folders from directoy
         File folder = new File(folderPath);
         if (folder.isDirectory()) {
             System.out.println("Reading files from " + folderPath);
-            
+
             // Get files from folder
             File[] filesInFolder = folder.listFiles();
             if (filesInFolder != null) {
                 for (File file : filesInFolder) {
-                    if (file.isDirectory()) {
-                        // Get files from subfolder
-                        files.addAll(readFolder(file.getAbsolutePath()));
+                    if (recursive) {
+                        if (file.isDirectory()) {
+                            // Get files from subfolder
+                            files.addAll(readFolder(file.getAbsolutePath(), true));
+                        }
                     }
 
                     if (file.isFile()) {

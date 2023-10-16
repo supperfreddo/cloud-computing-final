@@ -7,15 +7,18 @@ import java.util.Map;
 import nl.inholland.mapreduce.concurrent.MapReduce;
 import nl.inholland.mapreduce.framework.FileReader;
 import nl.inholland.mapreduce.framework.FolderReader;
-import nl.inholland.mapreduce.framework.Mapper;
 import nl.inholland.mapreduce.framework.Pair;
 
 public class WordCounter {
     private static final String FOLDER = "data";
+    private static final Boolean RECURSIVE = false;
 
     public static void main(String[] args) {
+        // Create map reduce instance
+        MapReduce<Object, String, String, Integer> mapReduce = new MapReduce<>();
+
         // Get list of files
-        List<File> fileList = new FolderReader().readFolder(FOLDER);
+        List<File> fileList = new FolderReader().readFolder(FOLDER, RECURSIVE);
 
         // Read files and add to input
         List<Pair<Object, String>> filesInput = new ArrayList<>();
@@ -25,8 +28,9 @@ public class WordCounter {
             i++;
         }
 
-        // Get files map
-        Map<String, Integer> filesMap = getMapReduced(filesInput, new FileMapper());
+        // Run map reduce
+        Map<String, List<Integer>> filesIntermediate = mapReduce.runMap(new FileMapper(), filesInput);
+        Map<String, Integer> filesMap = mapReduce.runReduce(new WordCountReducer(), filesIntermediate);
         // Display output
         filesMap.forEach((k, v) -> System.out.println(v + ": " + k));
 
@@ -43,25 +47,10 @@ public class WordCounter {
             }
         }
 
-        Map<String, List<Integer>> wordMap = getMap(wordInput, new WordCountMapper());
+        // Run map reduce
+        Map<String, List<Integer>> wordIntermediate = mapReduce.runMap(new WordCountMapper(), wordInput);
 
         // Display output
-        wordMap.forEach((k, v) -> System.out.println(k + ": " + v));
-    }
-
-    private static Map<String, List<Integer>> getMap(List<Pair<Object, String>> input, Mapper mapper) {
-        // Create map reduce instance
-        MapReduce<Object, String, String, Integer> mapReduce = new MapReduce<>();
-        // Run map
-        Map<String, List<Integer>> intermediate = mapReduce.runMap(mapper, input);
-        return intermediate;
-    }
-
-    private static Map<String, Integer> getMapReduced(List<Pair<Object, String>> input, Mapper mapper){
-        // Create map reduce instance
-        MapReduce<Object, String, String, Integer> mapReduce = new MapReduce<>();
-        // Run map reduce
-        Map<String, Integer> output = mapReduce.runReduce(new WordCountReducer(), getMap(input, mapper));
-        return output;
+        wordIntermediate.forEach((k, v) -> System.out.println(k + ": " + v));
     }
 }
