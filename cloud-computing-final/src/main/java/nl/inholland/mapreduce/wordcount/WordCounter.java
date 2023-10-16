@@ -38,19 +38,16 @@ public class WordCounter {
         FileReader fileReader = new FileReader();
         List<Pair<Object, String>> wordInput = new ArrayList<>();
         for (File file : fileList) {
-            // search for filename in files
-            String fileName = file.getPath();
-            for (Map.Entry<String, Integer> entry : filesMap.entrySet()) {
-                if (entry.getKey().equals(fileName)) {
-                    wordInput.addAll(fileReader.readFile(file, entry.getValue()));
-                }
+            if(filesMap.containsKey(file.getPath())){
+                // Get document id
+                Map.Entry<String, Integer> entry = filesMap.entrySet().stream().filter(e -> e.getKey().equals(file.getPath())).findFirst().get();
+                wordInput.addAll(fileReader.readFile(file, entry.getValue())); //wordInput omzetten naar de dictionary
             }
         }
 
         // Run map reduce
         Map<String, List<Integer>> wordIntermediate = mapReduce.runMap(new WordCountMapper(), wordInput);
-
         // Display output
-        wordIntermediate.forEach((k, v) -> System.out.println(k + ": " + v));
+        wordIntermediate.forEach((k, v) -> System.out.println(k + ": " + v)); //omzetten naar de invererted index
     }
 }

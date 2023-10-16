@@ -8,7 +8,8 @@ import java.util.List;
 
 public class FileReader {
     public List<Pair<Object, String>> readFile(File file, Integer documentId) {
-        List<Pair<Object, String>> lines = new ArrayList<>();
+        List<Pair<Object, String>> words = new ArrayList<>();
+        List<String> usedWords = new ArrayList<>();
 
         // Read file
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(file))) {
@@ -16,13 +17,25 @@ public class FileReader {
 
             // Add each line to lines
             while ((line = reader.readLine()) != null) {
-                lines.add(new Pair<>(documentId, line)); // key wordt hier document id
+                // foreach word in line add to words
+                String[] lineWords = line.split("\\s+");
+                for (String word : lineWords) {
+                    // Remove punctuation
+                    word = word.replaceAll("[^a-zA-Z0-9]", "");
+
+                    // check if word is already present in words
+                    if (!usedWords.contains(word)) {
+                        Pair<Object, String> pair = new Pair<>(documentId, word);
+                        words.add(pair);
+                        usedWords.add(word);
+                    }
+                }
             }
         } catch (IOException e) {
             // Display error message
             System.err.println("Error reading file: " + file.getName());
         }
 
-        return lines;
+        return words;
     }
 }
