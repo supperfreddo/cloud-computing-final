@@ -55,14 +55,10 @@ public class WordCounter {
         String input = "the aaaa test";
         // split the input into a list of words
         String[] words = input.split("\\s+");
-        List<Pair<Object, List<Integer>>> documents = new ArrayList<>();
+        List<Pair<Object, List<Integer>>> documents = new ArrayList<>(); //dit naar Map omzetten
         // for each word in the list of words
         for (String word : words) {
             documents.add(new Pair<>(word, wordIntermediate.get(word)));
-
-            // get the list of documents that contain the word
-            // documents.add(wordIntermediate.get(word));
-            // mapper maken zodat je gelijk string waarde die je zoekt gemapped hebt bij de results
         }
 
         // display the list of documents
