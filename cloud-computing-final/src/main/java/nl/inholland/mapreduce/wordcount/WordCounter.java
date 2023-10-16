@@ -48,7 +48,7 @@ public class WordCounter {
 
         // Run map reduce
         Map<String, List<Integer>> wordIntermediate = mapReduce.runMap(new WordCountMapper(), wordInput);
-        // Display output
+        // Display output ; dit uiteindelijk opslaan in een file ergens
         // wordIntermediate.forEach((k, v) -> System.out.println(k + ": " + v)); // omzetten naar de invererted index
 
         // ask user for a list of words sperated by spaces
