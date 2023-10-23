@@ -1,4 +1,4 @@
-package nl.inholland.mapreduce.wordcount;
+package nl.inholland.mapreduce.invertedindex;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,12 +7,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import nl.inholland.mapreduce.concurrent.MapReduce;
 import nl.inholland.mapreduce.framework.FileReader;
 import nl.inholland.mapreduce.framework.FolderReader;
 import nl.inholland.mapreduce.framework.Pair;
 
-public class WordCounter {
+public class InvertedIndex {
     // private static final String FOLDER = "E:\\cloud-computing-data";
     private static final String FOLDER = "data";
     private static final Boolean RECURSIVE = false;
@@ -34,7 +35,7 @@ public class WordCounter {
 
         // Run map reduce
         Map<String, List<Integer>> filesIntermediate = mapReduce.runMap(new FileMapper(), filesInput);
-        Map<String, Integer> filesMap = mapReduce.runReduce(new WordCountReducer(), filesIntermediate);
+        Map<String, Integer> filesMap = mapReduce.runReduce(new WordReducer(), filesIntermediate);
         // Display output
         filesMap.forEach((k, v) -> System.out.println(v + ": " + k));
         // Display total number of files
@@ -54,7 +55,7 @@ public class WordCounter {
         }
 
         // Run map reduce
-        Map<String, List<Integer>> wordIntermediate = mapReduce.runMap(new WordCountMapper(), wordInput);
+        Map<String, List<Integer>> wordIntermediate = mapReduce.runMap(new InvertedIndexMapper(), wordInput);
         // Display output ; TODO dit uiteindelijk opslaan in een file ergens
         wordIntermediate.forEach((k, v) -> System.out.println(k + ": " + v));
         // TODO omzetten naar de invererted index

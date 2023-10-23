@@ -1,4 +1,4 @@
-package nl.inholland.mapreduce.wordcount;
+package nl.inholland.mapreduce.invertedindex;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package nl.inholland.mapreduce.wordcount;
+package nl.inholland.mapreduce.invertedindex;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import nl.inholland.mapreduce.framework.Mapper;
 import nl.inholland.mapreduce.framework.Pair;
 
-public class WordCountMapper implements Mapper<Object, String, String, Integer> {
+public class InvertedIndexMapper implements Mapper<Object, String, String, Integer> {
 
     @Override
     public List<Pair<String, Integer>> map(Object key, String value) {
