@@ -11,8 +11,6 @@ public class FolderReader {
         // Get folders from directoy
         File folder = new File(folderPath);
         if (folder.isDirectory()) {
-            System.out.println("Reading files from " + folderPath);
-
             // Get files from folder
             File[] filesInFolder = folder.listFiles();
             if (filesInFolder != null) {
@@ -32,7 +30,7 @@ public class FolderReader {
             }
         } else {
             // Display error message
-            System.err.println("Invalid folder path.");
+            System.err.println("Invalid folder path "+folderPath+".");
         }
 
         return files;
