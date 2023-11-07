@@ -21,7 +21,7 @@ public class InvertedIndex {
     private static final String OUTPUT = "inverted_index.txt";
 
     private static Map<String, Integer> filesMap;
-    private static Map<String, List<Integer>> wordIntermediate;
+    private static Map<String, List<Integer>> dictionary;
 
     public static void main(String[] args) {
         // Create map reduce instance
@@ -29,6 +29,14 @@ public class InvertedIndex {
 
         // Get list of files
         List<File> fileList = new FolderReader().readFolder(FOLDER, RECURSIVE);
+
+        // Check if output file exists
+        File outFile = new File(OUTPUT);
+        if (!outFile.exists()) {
+            // TODO: create inverted index if it doesnst exists
+        } else {
+            // TODO: read dictoinary from file
+        }
 
         // Read files and add to input
         List<Pair<Object, String>> filesInput = new ArrayList<>();
@@ -60,10 +68,10 @@ public class InvertedIndex {
         }
 
         // Run map reduce
-        wordIntermediate = mapReduce.runMap(new InvertedIndexMapper(), wordInput);
+        dictionary = mapReduce.runMap(new InvertedIndexMapper(), wordInput);
         saveInvertedIndex();
         // Display output
-        wordIntermediate.forEach((k, v) -> System.out.println(k + ": " + v));
+        dictionary.forEach((k, v) -> System.out.println(k + ": " + v));
         // TODO omzetten naar de invererted index
 
         // Enter input using BufferReader
@@ -80,17 +88,13 @@ public class InvertedIndex {
             List<Pair<Object, List<Integer>>> documents = new ArrayList<>(); // dit naar Map omzetten
             // for each word in the list of words
             for (String word : words) {
-                documents.add(new Pair<>(word, wordIntermediate.get(word)));
+                documents.add(new Pair<>(word, dictionary.get(word)));
             }
 
             System.out.println("\nSearch results:");
             // display the amount of documents that contain the search words
-            for (Pair<Object, List<Integer>> document : documents) {
-                if (document.getValue() != null)
-                    System.out.println(document.getKey() + ": " + document.getValue());
-                else
-                    System.out.println(document.getKey() + ": " + "not found");
-            }
+            documents.forEach(document -> System.out
+                    .println(document.getKey() + ": " + (document.getValue() != null ? document.getValue() : "not found")));
         } catch (IOException e) {
             // display error message
             System.err.println("Error reading input.");
@@ -100,11 +104,11 @@ public class InvertedIndex {
     private static void saveInvertedIndex() {
         // Create file
         try (PrintWriter printWriter = new PrintWriter(OUTPUT)) {
-            for (Map.Entry<String, List<Integer>> entry : wordIntermediate.entrySet()) {
+            for (Map.Entry<String, List<Integer>> entry : dictionary.entrySet()) {
                 List<String> fileNames = new ArrayList<>();
-                for(Integer value : entry.getValue()){
-                    for(Map.Entry<String, Integer> e : filesMap.entrySet()){
-                        if(e.getValue() == value)
+                for (Integer value : entry.getValue()) {
+                    for (Map.Entry<String, Integer> e : filesMap.entrySet()) {
+                        if (e.getValue() == value)
                             fileNames.add(e.getKey());
                     }
                 }
