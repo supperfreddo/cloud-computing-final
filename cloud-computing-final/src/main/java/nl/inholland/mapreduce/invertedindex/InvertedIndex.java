@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,10 @@ public class InvertedIndex {
     // private static final String FOLDER = "E:\\cloud-computing-data";
     private static final String FOLDER = "data";
     private static final Boolean RECURSIVE = false;
+    private static final String OUTPUT = "inverted_index.txt";
+
+    private static Map<String, Integer> filesMap;
+    private static Map<String, List<Integer>> wordIntermediate;
 
     public static void main(String[] args) {
         // Create map reduce instance
@@ -35,7 +40,7 @@ public class InvertedIndex {
 
         // Run map reduce
         Map<String, List<Integer>> filesIntermediate = mapReduce.runMap(new FileMapper(), filesInput);
-        Map<String, Integer> filesMap = mapReduce.runReduce(new WordReducer(), filesIntermediate);
+        filesMap = mapReduce.runReduce(new WordReducer(), filesIntermediate);
         // Display output
         filesMap.forEach((k, v) -> System.out.println(v + ": " + k));
         // Display total number of files
@@ -55,8 +60,9 @@ public class InvertedIndex {
         }
 
         // Run map reduce
-        Map<String, List<Integer>> wordIntermediate = mapReduce.runMap(new InvertedIndexMapper(), wordInput);
-        // Display output ; TODO dit uiteindelijk opslaan in een file ergens
+        wordIntermediate = mapReduce.runMap(new InvertedIndexMapper(), wordInput);
+        saveInvertedIndex();
+        // Display output
         wordIntermediate.forEach((k, v) -> System.out.println(k + ": " + v));
         // TODO omzetten naar de invererted index
 
@@ -88,6 +94,25 @@ public class InvertedIndex {
         } catch (IOException e) {
             // display error message
             System.err.println("Error reading input.");
+        }
+    }
+
+    private static void saveInvertedIndex() {
+        // Create file
+        try (PrintWriter printWriter = new PrintWriter(OUTPUT)) {
+            for (Map.Entry<String, List<Integer>> entry : wordIntermediate.entrySet()) {
+                List<String> fileNames = new ArrayList<>();
+                for(Integer value : entry.getValue()){
+                    for(Map.Entry<String, Integer> e : filesMap.entrySet()){
+                        if(e.getValue() == value)
+                            fileNames.add(e.getKey());
+                    }
+                }
+                printWriter.println(entry.getKey() + ": " + fileNames);
+            }
+            printWriter.close();
+        } catch (IOException e) {
+            System.err.println("Error writing to file.");
         }
     }
 }
