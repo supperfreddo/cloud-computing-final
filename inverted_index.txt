@@ -1,3 +1,4 @@
+a: [data\a.txt]
 woorden: [data\test - Copy.txt, data\test.txt]
 test: [data\test - Copy.txt, data\test.txt]
 in: [data\test - Copy.txt, data\test.txt]
