@@ -19,6 +19,7 @@ public class MapReduce<IK, IV, OK, OV> {
         // Create intermediate data structure
         Map<OK, List<OV>> intermediate = new ConcurrentHashMap<>();
         // Create executor service
+        // TODO add flexibility to number of threads
         ExecutorService executor = Executors.newFixedThreadPool(4);
         // Create list of futures
         List<Future<Void>> futures = new ArrayList<>();
@@ -56,6 +57,7 @@ public class MapReduce<IK, IV, OK, OV> {
         // Create output data structure
         Map<OK, OV> output = new ConcurrentHashMap<>();
         // Create executor service
+        // TODO add flexibility to number of threads
         ExecutorService executor = Executors.newFixedThreadPool(4);
         // Create list of futures
         List<Future<Void>> futures = new ArrayList<>();
