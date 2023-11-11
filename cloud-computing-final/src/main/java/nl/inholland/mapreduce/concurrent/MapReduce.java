@@ -15,12 +15,17 @@ import nl.inholland.mapreduce.framework.Pair;
 import nl.inholland.mapreduce.framework.Reducer;
 
 public class MapReduce<IK, IV, OK, OV> {
+    private static Integer threads = 1;
+
+    public MapReduce(Integer threads) {
+        MapReduce.threads = threads;
+    }
+
     public Map<OK, List<OV>> runMap(Mapper<IK, IV, OK, OV> mapper, List<Pair<IK, IV>> input) {
         // Create intermediate data structure
         Map<OK, List<OV>> intermediate = new ConcurrentHashMap<>();
         // Create executor service
-        // TODO add flexibility to number of threads
-        ExecutorService executor = Executors.newFixedThreadPool(4);
+        ExecutorService executor = Executors.newFixedThreadPool(threads);
         // Create list of futures
         List<Future<Void>> futures = new ArrayList<>();
 
@@ -57,8 +62,7 @@ public class MapReduce<IK, IV, OK, OV> {
         // Create output data structure
         Map<OK, OV> output = new ConcurrentHashMap<>();
         // Create executor service
-        // TODO add flexibility to number of threads
-        ExecutorService executor = Executors.newFixedThreadPool(4);
+        ExecutorService executor = Executors.newFixedThreadPool(threads);
         // Create list of futures
         List<Future<Void>> futures = new ArrayList<>();
 

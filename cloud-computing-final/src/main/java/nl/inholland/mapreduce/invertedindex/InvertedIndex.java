@@ -19,47 +19,54 @@ import nl.inholland.mapreduce.framework.Pair;
 
 public class InvertedIndex {
     // Set constants
-    // private static final String FOLDER = "E:\\cloud-computing-data";
-    private static final String FOLDER = "data";
+    private static final String FOLDER = "E:\\aleph.gutenberg.org";
+    // private static final String FOLDER = "C:\\Users\\Fred\\Documents\\GitHub\\cloud-computing-final\\data";
     private static final Boolean RECURSIVE = false;
     private static final String OUTPUT = "inverted_index.txt";
 
     // Create map reduce instance
-    private static MapReduce<Object, String, String, Integer> mapReduce = new MapReduce<>();
+    private static MapReduce<Object, String, String, Integer> mapReduce = null;
     // Create files map and dictionary
     private static Map<String, Integer> filesMap;
     private static Map<String, List<Integer>> dictionary;
 
     public static void main(String[] args) {
+        Integer threads = 4;
+        // check if args contains the number of threads
+        if (args.length > 0) {
+            // set the number of threads
+            threads = Integer.parseInt(args[0]);
+        }
+        // Set map reduce instance
+        mapReduce = new MapReduce<>(threads);
+
         // Check if output file exists
         File outpFile = new File(OUTPUT);
         if (!outpFile.exists()) {
             // Create inverted index
-            createInvertedIndex();
+            createInvertedIndex(threads);
         } else {
             // Create inverted index from output
             createInvertedIndexFromOutput();
         }
-        // Search for words
-        searchForWords();
+        // // Search for words
+        // searchForWords();
     }
 
-    private static void createInvertedIndex() {
+    private static void createInvertedIndex(Integer threads) {
         // Get list of files
         List<String> fileNames = new ArrayList<>();
         new FolderReader().readFolder(FOLDER, RECURSIVE).forEach(f -> fileNames.add(f.getPath()));
         // Create files map
         createFilesMap(fileNames);
-        // Display files map
-        filesMap.forEach((k, v) -> System.out.println(v + ": " + k));
         // Display total number of files
-        System.out.println("Total number of files: " + filesMap.size());
+        System.out.println("Reading " + filesMap.size() + " files with " + threads + " thread(s).");
         // Create dictionary
         createDictionary(createWordInput());
         // Save inverted index
         saveInvertedIndex();
         // Display dictionary
-        dictionary.forEach((k, v) -> System.out.println(k + ": " + v));
+        // dictionary.forEach((k, v) -> System.out.println(k + ": " + v));
         // TODO omzetten naar de invererted index
     }
 
@@ -122,6 +129,9 @@ public class InvertedIndex {
         List<Pair<Object, String>> filesInput = new ArrayList<>();
         Integer i = 1;
         for (String fileName : fileNames) {
+            //check if fileName ends with .txt
+            if (!fileName.endsWith(".txt"))
+                continue;
             filesInput.add(new Pair<>(i, fileName));
             i++;
         }
@@ -170,7 +180,7 @@ public class InvertedIndex {
         lineParts[1] = lineParts[1].replaceAll("[\\[\\]]", "");
         // split the second part on ","
         String[] documentNames = lineParts[1].split(",");
-        return new Pair(lineParts[0], documentNames);
+        return new Pair<String, String[]>(lineParts[0], documentNames);
     }
 
     private static void searchForWords() {
