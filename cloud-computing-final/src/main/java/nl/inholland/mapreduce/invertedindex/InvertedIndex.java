@@ -19,7 +19,7 @@ import nl.inholland.mapreduce.framework.Pair;
 
 public class InvertedIndex {
     // Set constants
-    private static final String FOLDER = "C:\\Users\\Fred\\Documents\\GitHub\\cloud-computing-final\\data";
+    private static final String FOLDER = "data";
     private static final Boolean RECURSIVE = true;
     private static final String OUTPUT = "inverted_index.txt";
 
