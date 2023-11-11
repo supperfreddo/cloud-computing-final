@@ -18,28 +18,32 @@ public class InvertedIndexBenchmark {
     public BenchmarkRule benchmarkRule = new BenchmarkRule();
 
     @Test
-    @BenchmarkOptions(benchmarkRounds = 2, warmupRounds = 0)
+    @BenchmarkOptions(benchmarkRounds = 10, warmupRounds = 5)
     public void singleThreadedExecution() {
+        // Delete output file
         deleteInvertedIndexFile();
-        InvertedIndex.main(new String[] { "1" });
+        // Run single threaded
+        InvertedIndex.main(new String[] { "1", "the ape aap zoek search aaaa" });
     }
 
     @Test
-    @BenchmarkOptions(benchmarkRounds = 2, warmupRounds = 0)
+    @BenchmarkOptions(benchmarkRounds = 10, warmupRounds = 5)
     public void multiThreadedExecution() {
+        // Delete output file
         deleteInvertedIndexFile();
-        InvertedIndex.main(new String[] { "4" });
+        // Run multi threaded
+        InvertedIndex.main(new String[] { "4", "the ape aap zoek search aaaa" });
     }
 
     private void deleteInvertedIndexFile() {
-        // delete output file
+        // Delete output file
         Path pathToDelete = Paths.get("inverted_index.txt");
         try {
-            // check if file exists
+            // Check if file exists
             if (Files.exists(pathToDelete))
                 Files.delete(pathToDelete);
         } catch (IOException e) {
-            // display error
+            // Display error
             System.out.println("Error deleting inverted index file");
         }
     }
