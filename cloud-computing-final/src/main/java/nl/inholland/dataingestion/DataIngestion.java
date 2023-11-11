@@ -4,7 +4,7 @@ import org.apache.spark.sql.*;
 
 import org.apache.spark.SparkContext;
 
-public class SparkExample {
+public class DataIngestion {
 
     public static void main(String[] args) {
         // Create Spark session
