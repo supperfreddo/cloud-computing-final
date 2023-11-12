@@ -14,7 +14,7 @@ The data set for this part can be found here: https://www.kaggle.com/datasets/ch
 
 ## Classification
 
-For this part Naive Bayas is used to implement classifaction.
+For this part Naive Bayas is used to implement classifaction. It is applied to the dataset to predict whether a transaction is fraudulent or legitimate.
 
 The data set for this part can be found here: https://www.kaggle.com/datasets/chitwanmanchanda/fraudulent-transactions-data/ and should be placed in `data/Fraud.csv`.
 
