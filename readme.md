@@ -1,6 +1,6 @@
 # Cloud computing final
 
-This project is the final practical assignment for the course Data Engineering and Cloud Computing.
+This project is the final practical assignment for the course Data Engineering and Cloud Computing. This project consist of 3 parts. This project is made with the help of ChatGPT and GitHub Copilot.
 
 ## Map Reduce
 
@@ -17,6 +17,3 @@ The data set for this part can be found here: https://www.kaggle.com/datasets/ch
 For this part Naive Bayas is used to implement classifaction. It is applied to the dataset to predict whether a transaction is fraudulent or legitimate.
 
 The data set for this part can be found here: https://www.kaggle.com/datasets/chitwanmanchanda/fraudulent-transactions-data/ and should be placed in `data/Fraud.csv`.
-
-<!-- TODO -->
-<!-- Make sure to include all sources you used to create your work. Add a lot of comments in the code. When grading it should be possible to understand your choices without knowledge of either Machine Learning or Spark. -->
